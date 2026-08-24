@@ -18,8 +18,7 @@ import {
 } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { OrderType, PaymentType, RateQuoteBreakdown } from '@/lib/types';
-import type { AuthUser } from '@/types/auth';
-//import { DEMO_USERS } from '@/lib/auth';
+import { AuthUser, DEMO_USERS } from '@/types/auth';
 
 const PINCODE_PRESETS = [
   { pincode: '110001', name: '110001 - Connaught Place (North/Central)' },
@@ -73,13 +72,6 @@ export default function NewOrderPage() {
         }
       })
       .catch(() => { });
-  }, []);
-
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then((res) => res.json())
-      .then((data) => setUser(data.user))
-      .catch(console.error);
   }, []);
 
   // Fetch Live Dynamic Quote
