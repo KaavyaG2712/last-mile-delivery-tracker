@@ -18,7 +18,8 @@ import {
 } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { OrderType, PaymentType, RateQuoteBreakdown } from '@/lib/types';
-import { DEMO_USERS } from '@/lib/auth';
+import type { AuthUser } from '@/types/auth';
+//import { DEMO_USERS } from '@/lib/auth';
 
 const PINCODE_PRESETS = [
   { pincode: '110001', name: '110001 - Connaught Place (North/Central)' },
@@ -71,7 +72,14 @@ export default function NewOrderPage() {
           }
         }
       })
-      .catch(() => {});
+      .catch(() => { });
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => setUser(data.user))
+      .catch(console.error);
   }, []);
 
   // Fetch Live Dynamic Quote
@@ -227,11 +235,10 @@ export default function NewOrderPage() {
                   <button
                     type="button"
                     onClick={() => setOrderType('B2C')}
-                    className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 border transition-all ${
-                      orderType === 'B2C'
-                        ? 'bg-indigo-600 text-white border-indigo-400'
-                        : 'bg-slate-800/80 text-slate-300 border-slate-700'
-                    }`}
+                    className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 border transition-all ${orderType === 'B2C'
+                      ? 'bg-indigo-600 text-white border-indigo-400'
+                      : 'bg-slate-800/80 text-slate-300 border-slate-700'
+                      }`}
                   >
                     <User className="w-3.5 h-3.5" />
                     <span>B2C Retail</span>
@@ -239,11 +246,10 @@ export default function NewOrderPage() {
                   <button
                     type="button"
                     onClick={() => setOrderType('B2B')}
-                    className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 border transition-all ${
-                      orderType === 'B2B'
-                        ? 'bg-indigo-600 text-white border-indigo-400'
-                        : 'bg-slate-800/80 text-slate-300 border-slate-700'
-                    }`}
+                    className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 border transition-all ${orderType === 'B2B'
+                      ? 'bg-indigo-600 text-white border-indigo-400'
+                      : 'bg-slate-800/80 text-slate-300 border-slate-700'
+                      }`}
                   >
                     <Building2 className="w-3.5 h-3.5" />
                     <span>B2B Commercial</span>
@@ -257,11 +263,10 @@ export default function NewOrderPage() {
                   <button
                     type="button"
                     onClick={() => setPaymentType('PREPAID')}
-                    className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 border transition-all ${
-                      paymentType === 'PREPAID'
-                        ? 'bg-emerald-600 text-white border-emerald-400'
-                        : 'bg-slate-800/80 text-slate-300 border-slate-700'
-                    }`}
+                    className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 border transition-all ${paymentType === 'PREPAID'
+                      ? 'bg-emerald-600 text-white border-emerald-400'
+                      : 'bg-slate-800/80 text-slate-300 border-slate-700'
+                      }`}
                   >
                     <CreditCard className="w-3.5 h-3.5" />
                     <span>Prepaid</span>
@@ -269,11 +274,10 @@ export default function NewOrderPage() {
                   <button
                     type="button"
                     onClick={() => setPaymentType('COD')}
-                    className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 border transition-all ${
-                      paymentType === 'COD'
-                        ? 'bg-amber-600 text-white border-amber-400'
-                        : 'bg-slate-800/80 text-slate-300 border-slate-700'
-                    }`}
+                    className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 border transition-all ${paymentType === 'COD'
+                      ? 'bg-amber-600 text-white border-amber-400'
+                      : 'bg-slate-800/80 text-slate-300 border-slate-700'
+                      }`}
                   >
                     <CreditCard className="w-3.5 h-3.5" />
                     <span>COD Surcharge</span>
@@ -401,7 +405,7 @@ export default function NewOrderPage() {
           {/* Dimensions & Scale Weight */}
           <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4">
             <h3 className="text-sm font-semibold text-white">4. Dimensions & Weight Specifications</h3>
-            
+
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <label className="block text-[11px] text-slate-400 mb-1">Length (cm)</label>

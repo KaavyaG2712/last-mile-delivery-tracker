@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getAuthenticatedUser, DEMO_USERS } from '@/lib/auth';
+import { getAuthenticatedUser } from '@/lib/auth';
+import { DEMO_USERS } from '@/types/auth';
 
 export async function GET() {
   try {

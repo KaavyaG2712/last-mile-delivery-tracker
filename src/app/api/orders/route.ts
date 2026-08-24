@@ -236,7 +236,7 @@ export async function POST(req: NextRequest) {
       dropPincode: String(dropPincode).trim(),
     };
 
-    const quote = calculateRateQuote(input, pickupZone, dropZone, rateCard);
+    const quote = calculateRateQuote(input, pickupZone, dropZone, rateCard as any);
     const trackingNumber = generateTrackingNumber();
 
     // Create Order in DB

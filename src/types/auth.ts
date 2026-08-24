@@ -6,6 +6,8 @@ export interface AuthUser {
   phone?: string | null;
   currentZoneId?: string | null;
   status?: string | null;
+  lat?: number | null;
+  lng?: number | null;
 }
 
 export const DEMO_USERS: Array<{

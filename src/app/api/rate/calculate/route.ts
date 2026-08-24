@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const quote = calculateRateQuote(input, pickupZone, dropZone, rateCard);
+    const quote = calculateRateQuote(input, pickupZone, dropZone, rateCard as any);
 
     return NextResponse.json({
       success: true,
