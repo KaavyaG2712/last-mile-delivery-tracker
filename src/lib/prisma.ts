@@ -1,23 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-
 const getDatabaseUrl = () => {
-  const envUrl = process.env.DATABASE_URL;
-  if (envUrl && !envUrl.startsWith('file:')) {
-    return envUrl;
-  }
-
-  // Running on Vercel or serverless environment
+  // Running on Vercel or AWS Lambda serverless environment
   if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
-    const tmpDbPath = '/tmp/dev.db';
+    const tmpDbPath = path.join(path.sep === '/' ? '/tmp' : os.tmpdir(), 'dev.db');
     if (!fs.existsSync(tmpDbPath)) {
       const possibleSources = [
         path.join(process.cwd(), 'prisma', 'dev.db'),
         path.join(process.cwd(), 'dev.db'),
         path.resolve('./prisma/dev.db'),
+        path.join(__dirname, '..', '..', 'prisma', 'dev.db'),
       ];
 
       for (const source of possibleSources) {
@@ -31,10 +26,11 @@ const getDatabaseUrl = () => {
         }
       }
     }
-    return `file:${tmpDbPath}`;
+    return `file:${tmpDbPath.replace(/\\/g, '/')}`;
   }
 
-  // Local development fallback
+  // Local development
+  const envUrl = process.env.DATABASE_URL;
   if (envUrl && envUrl.startsWith('file:') && !envUrl.includes('./')) {
     return envUrl;
   }
@@ -43,12 +39,17 @@ const getDatabaseUrl = () => {
   return `file:${localDbPath}`;
 };
 
+const resolvedDbUrl = getDatabaseUrl();
+process.env.DATABASE_URL = resolvedDbUrl;
+
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
     datasources: {
       db: {
-        url: getDatabaseUrl(),
+        url: resolvedDbUrl,
       },
     },
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
