@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { DEMO_USERS, AuthUser } from '@/lib/auth';
+import { DEMO_USERS, AuthUser } from '@/types/auth';
 import { UserCheck, Shield, Truck, User, RefreshCw, ChevronDown, Check } from 'lucide-react';
 
 export const DemoSwitcher: React.FC = () => {
@@ -110,11 +110,10 @@ export const DemoSwitcher: React.FC = () => {
                 onClick={() => handleSwitch(user.id)}
                 disabled={isSwitching}
                 title={user.description}
-                className={`px-2.5 py-1 rounded-md border transition-all flex items-center gap-1 whitespace-nowrap text-xs ${
-                  isActive
+                className={`px-2.5 py-1 rounded-md border transition-all flex items-center gap-1 whitespace-nowrap text-xs ${isActive
                     ? 'bg-indigo-600 text-white border-indigo-400 shadow-sm font-semibold'
                     : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white'
-                }`}
+                  }`}
               >
                 {getRoleIcon(user.role)}
                 <span>{user.badge}</span>
